@@ -13,7 +13,7 @@ import org.springframework.util.CollectionUtils;
 @Component
 public class CertificateLinkBuilder extends AbstractLinkBuilder<GiftCertificateDto> {
 
-    private TagLinkBuilder tagLinkBuilder;
+    private final TagLinkBuilder tagLinkBuilder;
 
     @Autowired
     public CertificateLinkBuilder(TagLinkBuilder tagLinkBuilder) {
@@ -24,7 +24,7 @@ public class CertificateLinkBuilder extends AbstractLinkBuilder<GiftCertificateD
     public void addLinks(GiftCertificateDto giftCertificateDto) {
         addIdLinks(GiftCertificateController.class, giftCertificateDto, giftCertificateDto.getId(), SELF, UPDATE, DELETE);
         if (!CollectionUtils.isEmpty(giftCertificateDto.getTags())) {
-            giftCertificateDto.getTags().forEach(tagDto -> tagLinkBuilder.addLinks(tagDto));
+            giftCertificateDto.getTags().forEach(tagLinkBuilder::addLinks);
         }
     }
 }

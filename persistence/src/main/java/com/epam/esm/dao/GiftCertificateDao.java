@@ -17,4 +17,6 @@ public interface GiftCertificateDao extends BaseDao<GiftCertificate> {
     long getTotalNumber(CertificateSearchParams searchParams);
 
     GiftCertificate update(GiftCertificate certificate);
+
+    long countQuery();
 }

@@ -1,5 +1,7 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.entity.Pagination;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +11,7 @@ import java.util.Optional;
  */
 public interface BaseDao<T> {
 
-    List<T> findAll();
+    List<T> findAll(Pagination pagination);
 
     T create(T t);
 

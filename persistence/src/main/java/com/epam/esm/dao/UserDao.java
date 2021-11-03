@@ -7,4 +7,5 @@ import com.epam.esm.entity.User;
  * @date 25.10.2021 20:04
  */
 public interface UserDao extends BaseDao<User> {
+    long countQuery();
 }

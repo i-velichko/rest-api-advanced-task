@@ -12,7 +12,6 @@ import java.util.Map;
  * @date 28.10.2021 11:33
  */
 public interface GiftCertificateService {
-    List<GiftCertificateDto> findAll();
     PageDto<GiftCertificateDto> findAllBy(Map<String, String> params);
     GiftCertificateDto findBy(long id);
     GiftCertificateDto create(GiftCertificateDto giftCertificateDto);

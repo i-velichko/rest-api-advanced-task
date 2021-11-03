@@ -2,12 +2,18 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.dto.OrderDto;
+import com.epam.esm.dto.PageDto;
+import com.epam.esm.dto.UserDto;
+import com.epam.esm.entity.Pagination;
+import com.epam.esm.handler.ParamsHandler;
 import com.epam.esm.mapper.OrderMapper;
+import com.epam.esm.mapper.PaginationMapper;
 import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ivan Velichko
@@ -15,18 +21,25 @@ import java.util.List;
  */
 @Service
 public class OrderServiceImpl implements OrderService {
-    private OrderDao orderDao;
-    private OrderMapper orderMapper;
+    private final OrderDao orderDao;
+    private final OrderMapper orderMapper;
+    private final PaginationMapper paginationMapper;
+    private final ParamsHandler paramsHandler;
 
     @Autowired
-    public OrderServiceImpl(OrderDao orderDao, OrderMapper orderMapper) {
+    public OrderServiceImpl(OrderDao orderDao, OrderMapper orderMapper, PaginationMapper paginationMapper, ParamsHandler paramsHandler) {
         this.orderDao = orderDao;
         this.orderMapper = orderMapper;
+        this.paginationMapper = paginationMapper;
+        this.paramsHandler = paramsHandler;
     }
 
     @Override
-    public List<OrderDto> findAll() {
-        return orderMapper.ordersToOrderDtoList(orderDao.findAll());
+    public PageDto<OrderDto> findAll(Map<String, String> pageParams) {
+        Pagination pagination = paginationMapper.paginationDtoToPagination(paramsHandler.getPaginationDto(pageParams));
+        List<OrderDto> orderDtoList = orderMapper.ordersToOrderDtoList(orderDao.findAll(pagination));
+        long countQuery = orderDao.countQuery();
+        return new PageDto<>(orderDtoList, countQuery);
     }
 
     @Override

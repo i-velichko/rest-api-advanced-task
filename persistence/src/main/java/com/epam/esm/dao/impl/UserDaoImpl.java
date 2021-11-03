@@ -1,6 +1,8 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.UserDao;
+import com.epam.esm.entity.Pagination;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +29,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll(Pagination pagination) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         Root<User> user = criteriaQuery.from(User.class);
@@ -48,5 +50,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void delete(long id) {
 
+    }
+
+    @Override
+    public long countQuery() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        countQuery.select(criteriaBuilder.count(countQuery.from(User.class)));
+        return entityManager.createQuery(countQuery).getSingleResult();
     }
 }

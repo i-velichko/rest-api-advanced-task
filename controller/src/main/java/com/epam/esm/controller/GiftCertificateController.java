@@ -2,6 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.PageDto;
+import com.epam.esm.dto.PaginationDto;
 import com.epam.esm.linkbuilder.LinkBuilder;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.Map;
  * @author Ivan Velichko
  * @date 28.10.2021 11:38
  */
+
 @RestController
 @RequestMapping("/v1/certificates")
 public class GiftCertificateController {
@@ -29,15 +31,7 @@ public class GiftCertificateController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<GiftCertificateDto> findAll() {
-        List<GiftCertificateDto> certificateDtoList = giftCertificateService.findAll();
-        certificateDtoList.forEach(linkBuilder::addLinks);
-        return certificateDtoList;
-    }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public PageDto<GiftCertificateDto> getGiftCertificates(@RequestParam Map<String, String> params) {
+    public PageDto<GiftCertificateDto> findAllBy(@RequestParam Map<String, String> params) {
         PageDto<GiftCertificateDto> pageDto = giftCertificateService.findAllBy(params);
         pageDto.getPagePositions().forEach(linkBuilder::addLinks);
         return pageDto;

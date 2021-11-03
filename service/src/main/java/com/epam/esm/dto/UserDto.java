@@ -1,6 +1,7 @@
 package com.epam.esm.dto;
 
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
  * @author Ivan Velichko
@@ -12,7 +13,7 @@ import lombok.*;
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = {"id"})
-public class UserDto {
+public class UserDto extends RepresentationModel<UserDto> {
     private long id;
     private String nickname;
 }

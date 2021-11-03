@@ -2,6 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.entity.Order;
+import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.User;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +30,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Order> findAll() {
+    public List<Order> findAll(Pagination pagination) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
         Root<Order> order = criteriaQuery.from(Order.class);
@@ -49,6 +50,14 @@ public class OrderDaoImpl implements OrderDao {
         criteriaQuery.where(criteriaBuilder.equal(userOrderJoin.get(ID_PARAM), userId));
         return entityManager.createQuery(criteriaQuery)
                 .getResultList();
+    }
+
+    @Override
+    public long countQuery() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        countQuery.select(criteriaBuilder.count(countQuery.from(Order.class)));
+        return entityManager.createQuery(countQuery).getSingleResult();
     }
 
     @Override

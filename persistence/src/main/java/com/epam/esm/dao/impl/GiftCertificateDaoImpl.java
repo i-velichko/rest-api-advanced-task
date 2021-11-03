@@ -5,6 +5,7 @@ import com.epam.esm.dao.query.QueryBuilder;
 import com.epam.esm.entity.CertificateSearchParams;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Pagination;
+import com.epam.esm.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -33,12 +34,15 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public List<GiftCertificate> findAll() {
+    public List<GiftCertificate> findAll(Pagination pagination) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> certificate = criteriaQuery.from(GiftCertificate.class);
         criteriaQuery.select(certificate);
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return entityManager.createQuery(criteriaQuery)
+                .setFirstResult(pagination.getOffset())
+                .setMaxResults(pagination.getLimit())
+                .getResultList();
     }
 
     @Override
@@ -63,6 +67,14 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     @Override
     public GiftCertificate update(GiftCertificate certificate) {
         return entityManager.merge(certificate);
+    }
+
+    @Override
+    public long countQuery() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        countQuery.select(criteriaBuilder.count(countQuery.from(GiftCertificate.class)));
+        return entityManager.createQuery(countQuery).getSingleResult();
     }
 
     @Override

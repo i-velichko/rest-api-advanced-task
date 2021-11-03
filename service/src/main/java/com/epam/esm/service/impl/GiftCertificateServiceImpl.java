@@ -15,6 +15,7 @@ import com.epam.esm.mapper.PaginationMapper;
 import com.epam.esm.mapper.SearchParamMapper;
 import com.epam.esm.mapper.TagMapper;
 import com.epam.esm.service.GiftCertificateService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,19 +58,26 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificateDto> findAll() {
-        return certificateMapper.certificatesToCertificateDtoList(giftCertificateDao.findAll());
-    }
-
-    @Override
     public PageDto<GiftCertificateDto> findAllBy(Map<String, String> params) {
         PaginationDto paginationDto = paramsHandler.getPaginationDto(params);
         CertificateSearchParamsDto searchParamsDto = paramsHandler.getGiftCertificatesSearchParamsDto(params);
         Pagination pagination = paginationMapper.paginationDtoToPagination(paginationDto);
         CertificateSearchParams searchParams = searchParamMapper.searchParamsDtoToSearchParams(searchParamsDto);
-        List<GiftCertificate> certificates = giftCertificateDao.findAllBy(pagination, searchParams);
+        List<GiftCertificate> certificates;
+        long totalNumberPositions;
+        if (ObjectUtils.allNotNull(
+                searchParams.getPartNameOrDescription(),
+                searchParams.getSortingOrderByDate(),
+                searchParams.getSortingOrderByName(),
+                searchParams.getTagNames())) {
+            certificates = giftCertificateDao.findAllBy(pagination, searchParams);
+            totalNumberPositions = giftCertificateDao.getTotalNumber(searchParams);
+        } else {
+            certificates = giftCertificateDao.findAll(pagination);
+            totalNumberPositions = giftCertificateDao.countQuery();
+        }
         List<GiftCertificateDto> giftCertificateDtoList = certificateMapper.certificatesToCertificateDtoList(certificates);
-        long totalNumberPositions = giftCertificateDao.getTotalNumber(searchParams);
+
         return new PageDto<>(giftCertificateDtoList, totalNumberPositions);
     }
 

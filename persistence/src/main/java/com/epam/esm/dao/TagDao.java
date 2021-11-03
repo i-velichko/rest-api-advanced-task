@@ -8,4 +8,6 @@ import com.epam.esm.entity.Tag;
  */
 public interface TagDao extends BaseDao<Tag> {
     Tag findOrCreateTag(Tag tag);
+
+    long countQuery();
 }
