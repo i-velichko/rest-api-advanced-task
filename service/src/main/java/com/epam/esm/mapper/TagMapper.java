@@ -22,6 +22,6 @@ public interface TagMapper {
     List<TagDto> tagsToTagDtoList(List<Tag> tags);
 
     @InheritInverseConfiguration
-    Tag tag(TagDto tagDto);
+    Tag tagDtoToTag(TagDto tagDto);
 
 }

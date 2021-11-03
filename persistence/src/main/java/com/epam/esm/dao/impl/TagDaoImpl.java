@@ -42,8 +42,17 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
+    public Tag findOrCreateTag(Tag tag) {
+        return findBy(tag.getName()).orElseGet(() -> create(tag));
+    }
+
+    @Override
     public Optional<Tag> findBy(long id) {
         return Optional.ofNullable(entityManager.find(Tag.class, id));
+    }
+
+    public Optional<Tag> findBy(String name) {
+        return Optional.ofNullable(entityManager.find(Tag.class, name));
     }
 
     @Override

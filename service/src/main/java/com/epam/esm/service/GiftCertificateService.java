@@ -1,9 +1,11 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.GiftCertificateDto;
-import com.epam.esm.dto.TagDto;
+import com.epam.esm.dto.*;
+import com.epam.esm.entity.CertificateSearchParams;
+import com.epam.esm.entity.Pagination;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ivan Velichko
@@ -11,4 +13,10 @@ import java.util.List;
  */
 public interface GiftCertificateService {
     List<GiftCertificateDto> findAll();
+    PageDto<GiftCertificateDto> findAllBy(Map<String, String> params);
+    GiftCertificateDto findBy(long id);
+    GiftCertificateDto create(GiftCertificateDto giftCertificateDto);
+    void delete(long id);
+
+    GiftCertificateDto update(GiftCertificateDto giftCertificateDto);
 }
