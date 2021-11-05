@@ -11,5 +11,6 @@ import java.util.List;
 
 public interface OrderDao extends BaseDao<Order> {
     List<Order> findAllBy(long userId);
+
     long countQuery();
 }

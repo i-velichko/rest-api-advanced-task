@@ -3,7 +3,6 @@ package com.epam.esm.handler;
 import com.epam.esm.dto.CertificateSearchParamsDto;
 import com.epam.esm.dto.PaginationDto;
 import com.epam.esm.entity.SortingOrder;
-import com.epam.esm.exception.CustomErrorMessageCode;
 import com.epam.esm.exception.ErrorDetails;
 import com.epam.esm.exception.IncorrectParamValueException;
 import org.apache.commons.lang3.EnumUtils;
@@ -59,10 +58,10 @@ public class ParamsHandler {
     private int NO_FIELDS_TO_UPDATE;
     @Value("15")
     private int ORDER_INVALID_ID;
-    private static final String NUMBER = "number";
-    private static final String DEFAULT_NUMBER = "1";
-    private static final String SIZE = "size";
-    private static final String DEFAULT_SIZE = "5";
+    private static final String PAGE_NUMBER = "pageNumber";
+    private static final String DEFAULT_PAGE_NUMBER = "1";
+    private static final String PAGE_SIZE = "pageSize";
+    private static final String DEFAULT_PAGE_SIZE = "5";
     private static final String NUMBER_AND_SIZE_PATTERN = "^[1-9][0-9]{0,8}$";
     private static final String TAG_NAMES = "tagNames";
     private static final String SEPARATOR_TAGS = ",";
@@ -77,11 +76,11 @@ public class ParamsHandler {
      * @return the pagination dto
      */
     public PaginationDto getPaginationDto(Map<String, String> pageParams) {
-        String number = StringUtils.isBlank(pageParams.get(NUMBER)) ? DEFAULT_NUMBER : pageParams.get(NUMBER);
-        String size = StringUtils.isBlank(pageParams.get(SIZE)) ? DEFAULT_SIZE : pageParams.get(SIZE);
-        checkPageParamsValue(number, size);
-        int offset = ((Integer.parseInt(number) - 1)) * Integer.parseInt(size);
-        int limit = Integer.parseInt(size);
+        String pageNumber = StringUtils.isBlank(pageParams.get(PAGE_NUMBER)) ? DEFAULT_PAGE_NUMBER : pageParams.get(PAGE_NUMBER);
+        String pageSize = StringUtils.isBlank(pageParams.get(PAGE_SIZE)) ? DEFAULT_PAGE_SIZE : pageParams.get(PAGE_SIZE);
+        checkPageParamsValue(pageNumber, pageSize);
+        int offset = ((Integer.parseInt(pageNumber) - 1)) * Integer.parseInt(pageSize);
+        int limit = Integer.parseInt(pageSize);
         return new PaginationDto(offset, limit);
     }
 

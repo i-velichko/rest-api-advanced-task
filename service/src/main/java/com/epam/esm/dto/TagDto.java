@@ -21,9 +21,12 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"id"})
 public class TagDto extends RepresentationModel<TagDto> {
     @JsonProperty("id")
     private long id;
     @JsonProperty("name")
     private String name;
+
+
 }

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 /**
  * @author Ivan Velichko
  * @date 31.10.2021 12:36
@@ -39,6 +42,11 @@ public class OrderController {
     @GetMapping("/user/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDto> findAllBy(@PathVariable long userId) {
-        return orderService.findAllBy(userId);
+        List<OrderDto> orderDtoList = orderService.findAllBy(userId);
+        orderDtoList.forEach(linkBuilder::addLinks);
+        orderDtoList.forEach(orderDto -> orderDto.add(linkTo(methodOn(GiftCertificateController.class)
+                        .findAllBy(orderDto.getId()))
+                        .withRel("certificates"))); //todo paramName
+        return orderDtoList;
     }
 }

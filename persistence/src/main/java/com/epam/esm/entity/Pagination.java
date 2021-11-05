@@ -13,6 +13,6 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 public class Pagination {
-    private int offset;
-    private int limit;
+    private int pageNumber;
+    private int pageSize;
 }

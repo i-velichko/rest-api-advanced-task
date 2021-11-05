@@ -1,7 +1,6 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.PageDto;
 import com.epam.esm.dto.PaginationDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Pagination;
@@ -37,11 +36,9 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public PageDto<TagDto> findAll(Map<String, String> pageParams) {
+    public List<TagDto> findAll(Map<String, String> pageParams) {
         PaginationDto paginationDto = paramsHandler.getPaginationDto(pageParams);
         Pagination pagination = paginationMapper.paginationDtoToPagination(paginationDto);
-        List<TagDto> tags = tagMapper.tagsToTagDtoList(tagDao.findAll(pagination));
-        long countQuery = tagDao.countQuery();
-        return new PageDto<>(tags,countQuery);
+        return tagMapper.tagsToTagDtoList(tagDao.findAll(pagination));
     }
 }

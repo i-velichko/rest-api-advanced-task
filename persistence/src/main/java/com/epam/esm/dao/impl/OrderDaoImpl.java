@@ -43,13 +43,11 @@ public class OrderDaoImpl implements OrderDao {
         final String ID_PARAM = "id";
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
-        Root<Order> root = criteriaQuery.from(Order.class);
-        criteriaQuery.select(root);
-
-        Join<User, Order> userOrderJoin = root.join(USER_PARAM);
+        Root<Order> order = criteriaQuery.from(Order.class);
+        criteriaQuery.select(order);
+        Join<User, Order> userOrderJoin = order.join(USER_PARAM);
         criteriaQuery.where(criteriaBuilder.equal(userOrderJoin.get(ID_PARAM), userId));
-        return entityManager.createQuery(criteriaQuery)
-                .getResultList();
+        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
     @Override

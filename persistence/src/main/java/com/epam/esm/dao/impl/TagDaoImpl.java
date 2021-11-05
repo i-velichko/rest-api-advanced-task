@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -34,8 +35,8 @@ public class TagDaoImpl implements TagDao {
         Root<Tag> tag = criteriaQuery.from(Tag.class);
         criteriaQuery.select(tag);
         return entityManager.createQuery(criteriaQuery)
-                .setFirstResult(pagination.getOffset())
-                .setMaxResults(pagination.getLimit())
+                .setFirstResult(pagination.getPageNumber())
+                .setMaxResults(pagination.getPageSize())
                 .getResultList();
     }
 

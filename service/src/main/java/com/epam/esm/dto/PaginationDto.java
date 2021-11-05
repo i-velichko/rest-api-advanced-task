@@ -14,6 +14,6 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 public class PaginationDto {
-    private int offset;
-    private int limit;
+    private int pageNumber;
+    private int pageSize;
 }

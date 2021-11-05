@@ -82,6 +82,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
+    public List<GiftCertificateDto> findAllBy(long orderId) {
+        return certificateMapper.certificatesToCertificateDtoList(giftCertificateDao.findAllBy(orderId));
+    }
+
+    @Override
     public GiftCertificateDto findBy(long id) {
         return giftCertificateDao.findBy(id)
                 .map(certificateMapper::certificateToCertificateDto)

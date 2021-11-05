@@ -16,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(exclude = {"id", "tags"})
 public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> {
     private long id;
 

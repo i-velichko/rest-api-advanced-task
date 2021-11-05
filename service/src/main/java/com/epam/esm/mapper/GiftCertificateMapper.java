@@ -9,12 +9,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Ivan Velichko
  * @date 28.10.2021 11:34
  */
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = Tag.class)
+@Mapper(componentModel = "spring")
 public interface GiftCertificateMapper {
     GiftCertificateDto certificateToCertificateDto(GiftCertificate certificate);
 
@@ -23,7 +24,7 @@ public interface GiftCertificateMapper {
     @InheritInverseConfiguration
     GiftCertificate certificateDtoToCertificate(GiftCertificateDto certificateDto);
 
-    TagDto modelToDto(Tag tag);
-
-    List<TagDto> tagsToTagDtoList(List<Tag> tags);
+//    TagDto modelToDto(Tag tag);
+//
+//    Set<TagDto> tagsToTagDtoSet(Set<Tag> tags);
 }

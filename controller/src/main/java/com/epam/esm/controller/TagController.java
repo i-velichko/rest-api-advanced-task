@@ -1,16 +1,15 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.PageDto;
-import com.epam.esm.dto.PaginationDto;
 import com.epam.esm.dto.TagDto;
-import com.epam.esm.handler.ParamsHandler;
 import com.epam.esm.linkbuilder.LinkBuilder;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Ivan Velichko
@@ -31,9 +30,7 @@ public class TagController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PageDto<TagDto> findAll(@RequestParam Map<String, String> pageParams) {
-        PageDto<TagDto> pageDto = tagService.findAll(pageParams);
-        pageDto.getPagePositions().forEach(linkBuilder::addLinks);
-        return pageDto;
+    public List<TagDto> findAll(@RequestParam Map<String, String> pageParams) {
+        return tagService.findAll(pageParams).stream().peek(linkBuilder::addLinks).collect(Collectors.toList());
     }
 }
