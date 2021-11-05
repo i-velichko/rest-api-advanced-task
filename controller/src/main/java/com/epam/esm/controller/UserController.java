@@ -1,7 +1,5 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.PageDto;
-import com.epam.esm.dto.TagDto;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.linkbuilder.LinkBuilder;
 import com.epam.esm.service.UserService;
@@ -9,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,9 +28,9 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PageDto<UserDto> findAll(@RequestParam Map<String, String> pageParams) {
-        PageDto<UserDto> pageDto = userService.findAll(pageParams);
-        pageDto.getPagePositions().forEach(linkBuilder::addLinks);
-        return pageDto;
+    public List<UserDto> findAll(@RequestParam Map<String, String> pageParams) {
+        List<UserDto> userDtoList = userService.findAll(pageParams);
+        userDtoList.forEach(linkBuilder::addLinks);
+        return userDtoList;
     }
 }

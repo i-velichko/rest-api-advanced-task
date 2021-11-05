@@ -1,7 +1,6 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.OrderDto;
-import com.epam.esm.dto.PageDto;
 import com.epam.esm.linkbuilder.LinkBuilder;
 import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +32,10 @@ public class OrderController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PageDto<OrderDto> findAll(@RequestParam Map<String, String> pageParams) {
-        PageDto<OrderDto> pageDto = orderService.findAll(pageParams);
-        pageDto.getPagePositions().forEach(linkBuilder::addLinks);
-        return pageDto;
+    public List<OrderDto> findAll(@RequestParam Map<String, String> pageParams) {
+        List<OrderDto> orderDtoList = orderService.findAll(pageParams);
+        orderDtoList.forEach(linkBuilder::addLinks);
+        return orderDtoList;
     }
 
     @GetMapping("/user/{userId}")
@@ -45,8 +44,8 @@ public class OrderController {
         List<OrderDto> orderDtoList = orderService.findAllBy(userId);
         orderDtoList.forEach(linkBuilder::addLinks);
         orderDtoList.forEach(orderDto -> orderDto.add(linkTo(methodOn(GiftCertificateController.class)
-                        .findAllBy(orderDto.getId()))
-                        .withRel("certificates"))); //todo paramName
+                .findAllBy(orderDto.getId()))
+                .withRel("certificates"))); //todo paramName
         return orderDtoList;
     }
 }

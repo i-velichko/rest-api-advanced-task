@@ -1,7 +1,6 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.UserDao;
-import com.epam.esm.dto.PageDto;
 import com.epam.esm.dto.UserDto;
 import com.epam.esm.entity.Pagination;
 import com.epam.esm.handler.ParamsHandler;
@@ -10,7 +9,6 @@ import com.epam.esm.mapper.UserMapper;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -35,10 +33,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageDto<UserDto> findAll(Map<String, String> pageParams) {
+    public List<UserDto> findAll(Map<String, String> pageParams) {
         Pagination pagination = paginationMapper.paginationDtoToPagination(paramsHandler.getPaginationDto(pageParams));
-        List<UserDto> userDtoList = userMapper.usersToUserDtoList(userDao.findAll(pagination));
-        long countQuery = userDao.countQuery();
-        return new PageDto<>(userDtoList, countQuery);
+        return userMapper.usersToUserDtoList(userDao.findAll(pagination));
     }
 }

@@ -2,8 +2,6 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.dto.OrderDto;
-import com.epam.esm.dto.PageDto;
-import com.epam.esm.dto.UserDto;
 import com.epam.esm.entity.Pagination;
 import com.epam.esm.handler.ParamsHandler;
 import com.epam.esm.mapper.OrderMapper;
@@ -35,11 +33,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PageDto<OrderDto> findAll(Map<String, String> pageParams) {
+    public List<OrderDto> findAll(Map<String, String> pageParams) {
         Pagination pagination = paginationMapper.paginationDtoToPagination(paramsHandler.getPaginationDto(pageParams));
-        List<OrderDto> orderDtoList = orderMapper.ordersToOrderDtoList(orderDao.findAll(pagination));
-        long countQuery = orderDao.countQuery();
-        return new PageDto<>(orderDtoList, countQuery);
+        return orderMapper.ordersToOrderDtoList(orderDao.findAll(pagination));
     }
 
     @Override

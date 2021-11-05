@@ -2,7 +2,10 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.*;
+import com.epam.esm.dto.CertificateSearchParamsDto;
+import com.epam.esm.dto.GiftCertificateDto;
+import com.epam.esm.dto.PaginationDto;
+import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.CertificateSearchParams;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Pagination;
@@ -58,27 +61,22 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public PageDto<GiftCertificateDto> findAllBy(Map<String, String> params) {
+    public List<GiftCertificateDto> findAllBy(Map<String, String> params) {
         PaginationDto paginationDto = paramsHandler.getPaginationDto(params);
         CertificateSearchParamsDto searchParamsDto = paramsHandler.getGiftCertificatesSearchParamsDto(params);
         Pagination pagination = paginationMapper.paginationDtoToPagination(paginationDto);
         CertificateSearchParams searchParams = searchParamMapper.searchParamsDtoToSearchParams(searchParamsDto);
         List<GiftCertificate> certificates;
-        long totalNumberPositions;
         if (ObjectUtils.allNotNull(
                 searchParams.getPartNameOrDescription(),
                 searchParams.getSortingOrderByDate(),
                 searchParams.getSortingOrderByName(),
                 searchParams.getTagNames())) {
             certificates = giftCertificateDao.findAllBy(pagination, searchParams);
-            totalNumberPositions = giftCertificateDao.getTotalNumber(searchParams);
         } else {
             certificates = giftCertificateDao.findAll(pagination);
-            totalNumberPositions = giftCertificateDao.countQuery();
         }
-        List<GiftCertificateDto> giftCertificateDtoList = certificateMapper.certificatesToCertificateDtoList(certificates);
-
-        return new PageDto<>(giftCertificateDtoList, totalNumberPositions);
+        return certificateMapper.certificatesToCertificateDtoList(certificates);
     }
 
     @Override
