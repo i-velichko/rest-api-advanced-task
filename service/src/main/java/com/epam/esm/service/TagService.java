@@ -11,4 +11,12 @@ import java.util.Map;
  */
 public interface TagService {
     List<TagDto> findAll(Map<String, String> pageParams);
+
+    TagDto findBy(Long id);
+
+    TagDto findBy(String name);
+
+    TagDto create(TagDto tagDto);
+
+    void delete(Long id);
 }

@@ -33,4 +33,34 @@ public class TagController {
     public List<TagDto> findAll(@RequestParam Map<String, String> pageParams) {
         return tagService.findAll(pageParams).stream().peek(linkBuilder::addLinks).collect(Collectors.toList());
     }
+
+    @GetMapping("/{id}")
+    public TagDto findBy(@PathVariable Long id) {
+        TagDto tagDto = tagService.findBy(id);
+        linkBuilder.addLinks(tagDto);
+        return tagDto;
+    }
+
+    @GetMapping("/name")
+    public TagDto findBy(@RequestParam(value = "name") String name) {
+        TagDto tagDto = tagService.findBy(name);
+        linkBuilder.addLinks(tagDto);
+        return tagDto;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TagDto create(@RequestBody TagDto tagDto) {
+        return tagService.create(tagDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        try {
+            tagService.delete(id);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("entity.remove.tag"); //todo !!!
+        }
+    }
 }

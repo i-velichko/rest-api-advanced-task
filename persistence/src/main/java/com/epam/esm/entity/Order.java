@@ -40,4 +40,9 @@ public class Order {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private List<GiftCertificate> certificates = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        orderDate = LocalDateTime.now();
+    }
 }

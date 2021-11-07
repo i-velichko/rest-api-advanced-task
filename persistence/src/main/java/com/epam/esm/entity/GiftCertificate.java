@@ -52,4 +52,18 @@ public class GiftCertificate {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
+    @Column(name = "order_id")
+    private Long orderId;
+
+    @PrePersist
+    public void prePersist() {
+        createDate = LocalDateTime.now();
+        lastUpdateDate = createDate;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        lastUpdateDate = LocalDateTime.now();
+    }
+
 }

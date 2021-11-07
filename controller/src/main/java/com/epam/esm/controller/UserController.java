@@ -33,4 +33,26 @@ public class UserController {
         userDtoList.forEach(linkBuilder::addLinks);
         return userDtoList;
     }
+
+    @GetMapping(value = "/{id}")
+    public UserDto findBy(@PathVariable Long id) {
+        UserDto userDto = userService.findBy(id);
+        linkBuilder.addLinks(userDto);
+        return userDto;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto create(@RequestBody UserDto userDto) {
+        UserDto uDto = userService.create(userDto);
+        linkBuilder.addLinks(uDto);
+        return uDto;
+    }
+
+    @PatchMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto update(@PathVariable Long id, @RequestBody UserDto userDto) {
+        userDto.setId(id);
+        return userService.update(userDto);
+    }
 }

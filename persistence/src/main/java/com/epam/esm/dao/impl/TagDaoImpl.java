@@ -48,7 +48,8 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag findOrCreateTag(Tag tag) {
-        return findBy(tag.getName()).orElseGet(() -> create(tag));
+        Tag tag1 = findBy(tag.getName()).orElseGet(() -> create(tag));
+        return tag1;
     }
 
     @Override
@@ -57,7 +58,15 @@ public class TagDaoImpl implements TagDao {
     }
 
     public Optional<Tag> findBy(String name) {
-        return Optional.ofNullable(entityManager.find(Tag.class, name));
+        final String NAME_PARAM = "name";
+        final int TAG_PARAM = 0;
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tag> query = criteriaBuilder.createQuery(Tag.class);
+        Root<Tag> root = query.from(Tag.class);
+        query.select(root);
+        query.where(criteriaBuilder.equal(root.get(NAME_PARAM), name));
+        List<Tag> tags = entityManager.createQuery(query).getResultList();
+        return tags.size() == 0 ? Optional.empty() : Optional.of(tags.get(TAG_PARAM));
     }
 
     @Override
@@ -65,11 +74,4 @@ public class TagDaoImpl implements TagDao {
         entityManager.remove(entityManager.find(Tag.class, id));
     }
 
-    @Override
-    public long countQuery() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        countQuery.select(criteriaBuilder.count(countQuery.from(Tag.class)));
-        return entityManager.createQuery(countQuery).getSingleResult();
-    }
 }

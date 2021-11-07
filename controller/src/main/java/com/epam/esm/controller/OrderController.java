@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.linkbuilder.LinkBuilder;
 import com.epam.esm.service.OrderService;
@@ -47,5 +48,21 @@ public class OrderController {
                 .findAllBy(orderDto.getId()))
                 .withRel("certificates"))); //todo paramName
         return orderDtoList;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDto create(@RequestBody OrderDto orderDto) {
+        OrderDto creatableOrder = orderService.create(orderDto);
+        linkBuilder.addLinks(creatableOrder);
+        return creatableOrder;
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public OrderDto findBy(@PathVariable long id) {
+        OrderDto orderDto = orderService.findBy(id);
+        linkBuilder.addLinks(orderDto);
+        return orderDto;
     }
 }

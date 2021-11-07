@@ -24,7 +24,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @PersistenceContext
     private EntityManager entityManager;
-    private QueryBuilder queryBuilder;
+    private final QueryBuilder queryBuilder;
 
     @Autowired
     public GiftCertificateDaoImpl(QueryBuilder queryBuilder) {
@@ -64,27 +64,9 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-
-    @Override
-    public long getTotalNumber(CertificateSearchParams searchParams) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<GiftCertificate> criteriaQuery = queryBuilder.createCriteriaQuery(searchParams, criteriaBuilder);
-        return entityManager.createQuery(criteriaQuery)
-                .getResultStream()
-                .count();
-    }
-
     @Override
     public GiftCertificate update(GiftCertificate certificate) {
         return entityManager.merge(certificate);
-    }
-
-    @Override
-    public long countQuery() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        countQuery.select(criteriaBuilder.count(countQuery.from(GiftCertificate.class)));
-        return entityManager.createQuery(countQuery).getSingleResult();
     }
 
     @Override

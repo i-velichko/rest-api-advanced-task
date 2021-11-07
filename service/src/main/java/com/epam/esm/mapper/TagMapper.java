@@ -17,7 +17,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = GiftCertificate.class)
 public interface TagMapper {
 
-    TagDto modelToDto(Tag tag);
+    TagDto tagToTagDto(Tag tag);
 
     List<TagDto> tagsToTagDtoList(List<Tag> tags);
 

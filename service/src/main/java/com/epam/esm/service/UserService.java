@@ -11,4 +11,10 @@ import java.util.Map;
  */
 public interface UserService {
     List<UserDto> findAll(Map<String, String> pageParams);
+
+    UserDto findBy(Long id);
+
+    UserDto create(UserDto userDto);
+
+    UserDto update(UserDto userDto);
 }

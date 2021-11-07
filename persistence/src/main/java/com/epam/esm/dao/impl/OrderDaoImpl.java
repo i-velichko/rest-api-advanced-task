@@ -60,16 +60,17 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public Order create(Order order) {
-        return null;
+        entityManager.persist(order);
+        return order;
     }
 
     @Override
     public Optional<Order> findBy(long id) {
-        return Optional.empty();
+        return Optional.ofNullable(entityManager.find(Order.class, id));
     }
 
     @Override
     public void delete(long id) {
-
+        throw new UnsupportedOperationException(); //todo ??
     }
 }

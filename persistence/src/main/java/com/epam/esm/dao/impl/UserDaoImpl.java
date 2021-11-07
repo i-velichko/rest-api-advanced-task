@@ -39,12 +39,23 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User create(User user) {
-        return null;
+        entityManager.persist(user);
+        return user;
     }
 
     @Override
     public Optional<User> findBy(long id) {
-        return Optional.empty();
+        return Optional.ofNullable(entityManager.find(User.class, id));
+    }
+
+    @Override
+    public User update(User user) {
+        return entityManager.merge(user);
+    }
+
+    @Override
+    public boolean isPresent(long id) {
+        return entityManager.contains(entityManager.find(User.class, id));
     }
 
     @Override

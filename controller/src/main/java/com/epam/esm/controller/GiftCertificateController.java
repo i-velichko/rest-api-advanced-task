@@ -27,6 +27,14 @@ public class GiftCertificateController {
         this.linkBuilder = linkBuilder;
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public GiftCertificateDto create( @RequestBody GiftCertificateDto certificateDto) {
+        GiftCertificateDto giftCertificateDto = giftCertificateService.create(certificateDto);
+        linkBuilder.addLinks(giftCertificateDto);
+        return giftCertificateDto;
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<GiftCertificateDto> findAllBy(@RequestParam Map<String, String> params) {

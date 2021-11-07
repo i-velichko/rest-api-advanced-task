@@ -8,4 +8,8 @@ import com.epam.esm.entity.User;
  */
 public interface UserDao extends BaseDao<User> {
     long countQuery();
+
+    User update(User user);
+
+    boolean isPresent(long id);
 }
