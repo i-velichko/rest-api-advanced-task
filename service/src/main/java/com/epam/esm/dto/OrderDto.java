@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -23,14 +24,26 @@ import java.util.Set;
 @Setter
 @EqualsAndHashCode(exclude = {"id"})
 public class OrderDto extends RepresentationModel<OrderDto> {
+
+    @Null(groups = OrderDto.OnCreate.class)
+    @Positive
     private long id;
+
+    public interface OnCreate {
+    }
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private LocalDateTime orderDate;
 
+    @Null
     private BigDecimal cost;
 
+    @NotNull
+    @Positive
     private long userId;
+
+    @NotEmpty
+    @Size(min = 1, max = 45)
     private String userNickname;
 
     private Set<Long> certificateIds;

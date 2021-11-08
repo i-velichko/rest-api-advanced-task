@@ -8,6 +8,7 @@ import org.springframework.hateoas.RepresentationModel;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,9 +24,13 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"id"})
 public class TagDto extends RepresentationModel<TagDto> {
-    @JsonProperty("id")
+
+    @NotNull()
+    @Positive
     private long id;
-    @JsonProperty("name")
+
+    @NotEmpty
+    @Size(min = 1, max = 45)
     private String name;
 
 

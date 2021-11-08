@@ -5,8 +5,14 @@ import com.epam.esm.linkbuilder.LinkBuilder;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,6 +23,7 @@ import java.util.stream.Collectors;
  */
 
 @RestController
+@Validated
 @RequestMapping("/v1/tags")
 public class TagController {
     private final TagService tagService;
@@ -35,14 +42,14 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    public TagDto findBy(@PathVariable Long id) {
+    public TagDto findBy(@PathVariable @Positive Long id) {
         TagDto tagDto = tagService.findBy(id);
         linkBuilder.addLinks(tagDto);
         return tagDto;
     }
 
     @GetMapping("/name")
-    public TagDto findBy(@RequestParam(value = "name") String name) {
+    public TagDto findBy(@RequestParam(value = "name") @NotEmpty @Size(min = 1, max = 45) String name) {
         TagDto tagDto = tagService.findBy(name);
         linkBuilder.addLinks(tagDto);
         return tagDto;
@@ -50,13 +57,13 @@ public class TagController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TagDto create(@RequestBody TagDto tagDto) {
+    public TagDto create(@Valid @RequestBody TagDto tagDto) {
         return tagService.create(tagDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @Positive Long id) {
         try {
             tagService.delete(id);
         } catch (RuntimeException e) {

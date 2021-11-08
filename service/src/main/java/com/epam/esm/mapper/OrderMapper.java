@@ -29,8 +29,7 @@ public interface OrderMapper {
         orderDto.setUserId(order.getUser().getId());
         orderDto.setUserNickname(order.getUser().getNickname());
         Set<Long> set = order.getCertificates().stream().mapToLong(GiftCertificate::getId).boxed().collect(Collectors.toSet());
-        orderDto.setCertificateIds(set
-        );
+        orderDto.setCertificateIds(set);
         return orderDto;
     }
 

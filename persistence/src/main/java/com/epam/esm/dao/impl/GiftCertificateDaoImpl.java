@@ -55,13 +55,14 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public List<GiftCertificate> findAllBy(long orderId) {
-        final String ID_PARAM = "id";
+        final String ORDER_ID = "orderId";
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> root = criteriaQuery.from(GiftCertificate.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get(ID_PARAM),orderId));
+        criteriaQuery.where(criteriaBuilder.equal(root.get(ORDER_ID),orderId));
         criteriaQuery.select(root);
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        List<GiftCertificate> resultList = entityManager.createQuery(criteriaQuery).getResultList();
+        return resultList;
     }
 
     @Override
