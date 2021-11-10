@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+import static com.epam.esm.exception.CustomErrorMessageCode.TAG_NOT_FOUND;
+
 /**
  * @author Ivan Velichko
  * @date 25.10.2021 23:29
@@ -49,7 +51,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDto findBy(Long id) {
-        return tagMapper.tagToTagDto(tagDao.findBy(id).orElseThrow(NoSuchEntityException::new));
+        return tagMapper.tagToTagDto(tagDao.findBy(id).orElseThrow(() -> new NoSuchEntityException(TAG_NOT_FOUND)));
     }
 
     @Override
@@ -64,6 +66,12 @@ public class TagServiceImpl implements TagService {
         }
         Tag tag = tagDao.create(tagMapper.tagDtoToTag(tagDto));
         return tagMapper.tagToTagDto(tag);
+    }
+
+    @Override
+    public TagDto findMostUsersWidelyUsedTag(long userId) {
+        return tagMapper.tagToTagDto(tagDao.findMostUsersWidelyUsedTag(userId)
+                .orElseThrow(NoSuchEntityException::new));
     }
 
     @Override

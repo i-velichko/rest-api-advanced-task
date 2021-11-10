@@ -1,16 +1,14 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.GiftCertificate;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.validation.constraints.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+
+import static com.epam.esm.exception.CustomErrorMessageCode.TAG_NAME_INCORRECT;
 
 /**
  * @author Ivan Velichko
@@ -25,13 +23,9 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"id"})
 public class TagDto extends RepresentationModel<TagDto> {
 
-    @NotNull()
-    @Positive
     private long id;
 
-    @NotEmpty
+    @NotEmpty()
     @Size(min = 1, max = 45)
     private String name;
-
-
 }

@@ -18,5 +18,7 @@ public interface TagService {
 
     TagDto create(TagDto tagDto);
 
+    TagDto findMostUsersWidelyUsedTag(long userId);
+
     void delete(Long id);
 }

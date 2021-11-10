@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -42,7 +41,7 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    public TagDto findBy(@PathVariable @Positive Long id) {
+    public TagDto findBy(@PathVariable Long id) {
         TagDto tagDto = tagService.findBy(id);
         linkBuilder.addLinks(tagDto);
         return tagDto;
@@ -55,9 +54,16 @@ public class TagController {
         return tagDto;
     }
 
+    @GetMapping("/users_best_tag/{id}")
+    public TagDto findMostUsersMostWidelyUsedTag(@PathVariable long id) {
+        TagDto tagDto = tagService.findMostUsersWidelyUsedTag(id);
+        linkBuilder.addLinks(tagDto);
+        return tagDto;
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TagDto create(@Valid @RequestBody TagDto tagDto) {
+    public TagDto create(@RequestBody @Valid TagDto tagDto) {
         return tagService.create(tagDto);
     }
 

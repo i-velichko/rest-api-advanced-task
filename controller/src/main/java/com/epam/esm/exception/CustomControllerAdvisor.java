@@ -1,6 +1,7 @@
 package com.epam.esm.exception;
 
 import com.epam.esm.i18n.I18nManager;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -10,27 +11,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import static com.epam.esm.exception.CustomErrorMessageCode.ENTITY_NOT_FOUND;
-import static com.epam.esm.exception.CustomErrorMessageCode.TAG_CAN_NOT_BE_REMOVED;
+import static com.epam.esm.exception.CustomErrorMessageCode.*;
 
 /**
  * @author Ivan Velichko
  * @date 04.10.2021 10:37
  */
 
-@ControllerAdvice
+@RestControllerAdvice
 @PropertySource("classpath:error_code.properties")
 public class CustomControllerAdvisor {
     private static final String UNDEFINED_DAO = "undefined dao";
     private final I18nManager i18nManager;
+    private static final String ERROR_MESSAGE = "errorMessage";
+    private static final String ERROR_CODE = "errorCode";
 
     @Value("${no.such.entity.code}")
     private int NO_SUCH_ENTITY_CODE;
@@ -46,6 +47,8 @@ public class CustomControllerAdvisor {
     private int NO_SUCH_PARAMETER_CODE;
     @Value("${convert.entity.error.code}")
     private int CONVERT_ENTITY_ERROR_CODE;
+    @Value("${not.valid.request.error.code}")
+    private int NOT_VALID_REQUEST_CODE;
 
     @Autowired
     public CustomControllerAdvisor(I18nManager i18nManager) {
@@ -82,10 +85,19 @@ public class CustomControllerAdvisor {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<CustomValidationResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, Locale locale) {
-        BindingResult bindingResult = e.getBindingResult();
-        List<String> errors = i18nManager.getLocaleValidationErrorMessages(bindingResult, locale);
-        CustomValidationResponse response = new CustomValidationResponse(errors, METHOD_ARGUMENT_NOT_VALID_CODE);
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        String message = resolveBindingResultErrors(e.getBindingResult());
+        return new ResponseEntity<>(createResponse(40001, message), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, Locale locale) {
+        return new ResponseEntity<>(createResponse(40001, i18nManager.getMessage(INVALID_REQUEST_VALUE, locale)), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<CustomResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        CustomResponse response = new CustomResponse(e.getMessage(), NOT_VALID_REQUEST_CODE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -101,6 +113,23 @@ public class CustomControllerAdvisor {
         String localeMsg = i18nManager.getMessage(e.getMessage(), locale);
         CustomResponse response = new CustomResponse(localeMsg, CONVERT_ENTITY_ERROR_CODE);
         return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    private Map<String, Object> createResponse(int errorCode, String errorDescription) {
+        Map<String, Object> response = new HashMap<>();
+        response.put(ERROR_MESSAGE, errorDescription);
+        response.put(ERROR_CODE, errorCode);
+        return response;
+    }
+
+    private String resolveBindingResultErrors(BindingResult bindingResult) {
+        return bindingResult.getFieldErrors().stream()
+                .map(fr -> {
+                    String field = fr.getField();
+                    String validationMessage = fr.getDefaultMessage();
+                    return String.format("'%s': %s", field, validationMessage);
+                })
+                .collect(Collectors.joining(", "));
     }
 
     private String getEntityNameByMsg(Exception e, String beforeName, String afterName) {
