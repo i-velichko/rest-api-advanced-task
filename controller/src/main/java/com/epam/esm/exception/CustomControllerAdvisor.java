@@ -56,32 +56,21 @@ public class CustomControllerAdvisor {
     }
 
     @ExceptionHandler(NoSuchEntityException.class)
-    public ResponseEntity<CustomResponse> handleNoSuchEntityException(NoSuchEntityException e, Locale locale) {
+    public ResponseEntity<Object> handleNoSuchEntityException(NoSuchEntityException e, Locale locale) {
         String localeMsg = i18nManager.getMessage(e.getMessage(), locale);
-        CustomResponse response = new CustomResponse(localeMsg, NO_SUCH_ENTITY_CODE);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<CustomResponse> handleEmptyResultDataAccessException(EmptyResultDataAccessException e, Locale locale) {
-        String msg = getEntityNameByMsg(e, ".", "Dao").toLowerCase(Locale.ROOT);
-        String localeMsg = i18nManager.getMessage(ENTITY_NOT_FOUND + msg, locale);
-        CustomResponse response = new CustomResponse(localeMsg, EMPTY_RESULT_DATA_ACCESS_CODE);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(createResponse(NO_SUCH_ENTITY_CODE, localeMsg), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<CustomResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e, Locale locale) {
+    public ResponseEntity<Object> handleDataIntegrityViolationException(Locale locale) {
         String localeMsg = i18nManager.getMessage(TAG_CAN_NOT_BE_REMOVED, locale);
-        CustomResponse response = new CustomResponse(localeMsg, DATA_INTEGRITY_VIOLATION_CODE);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(createResponse(DATA_INTEGRITY_VIOLATION_CODE, localeMsg), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DuplicateEntityException.class)
-    public ResponseEntity<CustomResponse> handleDuplicateEntityException(DuplicateEntityException e, Locale locale) {
+    public ResponseEntity<Object> handleDuplicateEntityException(DuplicateEntityException e, Locale locale) {
         String localeMsg = i18nManager.getMessage(e.getMessage(), locale);
-        CustomResponse response = new CustomResponse(localeMsg, DUPLICATE_ENTITY_CODE);
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(createResponse(DUPLICATE_ENTITY_CODE, localeMsg), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -91,28 +80,37 @@ public class CustomControllerAdvisor {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, Locale locale) {
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(Locale locale) {
         return new ResponseEntity<>(createResponse(40001, i18nManager.getMessage(INVALID_REQUEST_VALUE, locale)), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<CustomResponse> handleConstraintViolationException(ConstraintViolationException e) {
-        CustomResponse response = new CustomResponse(e.getMessage(), NOT_VALID_REQUEST_CODE);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
+        return new ResponseEntity<>(createResponse(NOT_VALID_REQUEST_CODE, e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IncorrectParamValueException.class)
+    public ResponseEntity<Object> handleIncorrectParamValueException(IncorrectParamValueException e) {
+        return new ResponseEntity<>(createResponse(NO_SUCH_PARAMETER_CODE, e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoSuchParameterException.class)
-    public ResponseEntity<CustomResponse> handleNoSuchParameterException(NoSuchParameterException e, Locale locale) {
+    public ResponseEntity<Object> handleNoSuchParameterException(NoSuchParameterException e, Locale locale) {
         String localeMsg = i18nManager.getMessage(e.getMessage(), locale);
-        CustomResponse response = new CustomResponse(localeMsg, NO_SUCH_PARAMETER_CODE);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(createResponse(NO_SUCH_PARAMETER_CODE, localeMsg), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConvertEntityException.class)
-    public ResponseEntity<CustomResponse> handleConvertEntityException(ConvertEntityException e, Locale locale) {
+    public ResponseEntity<Object> handleConvertEntityException(ConvertEntityException e, Locale locale) {
         String localeMsg = i18nManager.getMessage(e.getMessage(), locale);
-        CustomResponse response = new CustomResponse(localeMsg, CONVERT_ENTITY_ERROR_CODE);
-        return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(createResponse(CONVERT_ENTITY_ERROR_CODE, localeMsg), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException e, Locale locale) {
+        String msg = getEntityNameByMsg(e, ".", "Dao").toLowerCase(Locale.ROOT);
+        String localeMsg = i18nManager.getMessage(ENTITY_NOT_FOUND + msg, locale);
+        return new ResponseEntity<>(createResponse(EMPTY_RESULT_DATA_ACCESS_CODE, localeMsg), HttpStatus.BAD_REQUEST);
     }
 
     private Map<String, Object> createResponse(int errorCode, String errorDescription) {

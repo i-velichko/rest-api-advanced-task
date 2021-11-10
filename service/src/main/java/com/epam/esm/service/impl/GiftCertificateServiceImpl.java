@@ -28,6 +28,8 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static com.epam.esm.exception.CustomErrorMessageCode.*;
+
 /**
  * @author Ivan Velichko
  * @date 28.10.2021 11:33
@@ -90,7 +92,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto findBy(long id) {
         return giftCertificateDao.findBy(id)
                 .map(certificateMapper::certificateToCertificateDto)
-                .orElseThrow(NoSuchEntityException::new);
+                .orElseThrow(() -> new NoSuchEntityException(CERTIFICATE_NOT_FOUND));
     }
 
     @Override
@@ -108,16 +110,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificateDto update(GiftCertificateDto giftCertificateDto) {
         GiftCertificate giftCertificate = giftCertificateDao.findBy(giftCertificateDto.getId())
-                .orElseThrow(() -> new NoSuchEntityException("error_message.certificate_not_found"));
-
+                .orElseThrow(() -> new NoSuchEntityException(CERTIFICATE_NOT_FOUND));
         Set<Tag> tags = new HashSet<>();
         if (!CollectionUtils.isEmpty(giftCertificateDto.getTags())) {
             tags = checkTagsToUpdate(giftCertificateDto.getTags());
         }
         if (isAllFieldsNull(giftCertificateDto) && tags.isEmpty()) {
-            throw new IncorrectParamValueException("certificate.update.no_data_for_update");
+            throw new IncorrectParamValueException(NO_DATA_FOR_UPDATE_CERTIFICATE);
         }
-
         GiftCertificate updatableCertificate = createUpdatableCertificate(giftCertificate, certificateMapper.certificateDtoToCertificate(giftCertificateDto));
         updatableCertificate.getTags().addAll(tags);
         return certificateMapper.certificateToCertificateDto(giftCertificateDao.update(updatableCertificate));
@@ -133,9 +133,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         certificateTags.forEach(t -> {
             if (t.getId() != 0) {
                 Tag tag = tagDao.findBy(t.getId())
-                        .orElseThrow(() -> new NoSuchEntityException("giftcertificate.tag.not_present"));
+                        .orElseThrow(() -> new NoSuchEntityException(TAG_NOT_FOUND));
                 if (Objects.nonNull(t.getName()) && !t.getName().equalsIgnoreCase(tag.getName())) {
-                    throw new IncorrectParamValueException("tag.name.not_correct_id_name_pair", t.getName());
+                    throw new IncorrectParamValueException(TAG_NAME_INCORRECT, t.getName());
                 }
                 newCertificateTags.add(tag);
             }

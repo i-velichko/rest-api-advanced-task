@@ -28,9 +28,6 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
     public interface OnUpdate {
     }
 
-    @Null(groups = OnCreate.class)
-    @NotNull(groups = OnUpdate.class)
-    @Positive
     private long id;
 
     @NotEmpty(groups = OnCreate.class)

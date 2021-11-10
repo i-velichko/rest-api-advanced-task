@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +31,8 @@ public class GiftCertificateController {
     }
 
     @PostMapping
-    @Validated(GiftCertificateDto.OnCreate.class)
     @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto create(@Valid @RequestBody GiftCertificateDto certificateDto) {
+    public GiftCertificateDto create(@Validated(GiftCertificateDto.OnCreate.class) @RequestBody GiftCertificateDto certificateDto) {
         GiftCertificateDto giftCertificateDto = giftCertificateService.create(certificateDto);
         linkBuilder.addLinks(giftCertificateDto);
         return giftCertificateDto;
@@ -50,7 +48,7 @@ public class GiftCertificateController {
 
     @GetMapping("/orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<GiftCertificateDto> findAllBy(@PathVariable @Positive long orderId) {
+    public List<GiftCertificateDto> findAllBy(@PathVariable long orderId) {
         List<GiftCertificateDto> giftCertificateDtoList = giftCertificateService.findAllBy(orderId);
         giftCertificateDtoList.forEach(linkBuilder::addLinks);
         return giftCertificateDtoList;
@@ -58,16 +56,15 @@ public class GiftCertificateController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateDto findBy(@PathVariable @Positive long id) {
+    public GiftCertificateDto findBy(@PathVariable long id) {
         GiftCertificateDto giftCertificateDto = giftCertificateService.findBy(id);
         linkBuilder.addLinks(giftCertificateDto);
         return giftCertificateDto;
     }
 
     @PatchMapping("/{id}")
-    @Validated(GiftCertificateDto.OnUpdate.class)
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateDto updateGiftCertificate(@PathVariable @Positive long id, @Valid @RequestBody GiftCertificateDto giftCertificateDto) {
+    public GiftCertificateDto updateGiftCertificate(@PathVariable long id, @Validated(GiftCertificateDto.OnUpdate.class) @RequestBody GiftCertificateDto giftCertificateDto) {
         giftCertificateDto.setId(id);
         GiftCertificateDto updatedGiftCertificateDto = giftCertificateService.update(giftCertificateDto);
         linkBuilder.addLinks(updatedGiftCertificateDto);

@@ -24,6 +24,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.epam.esm.exception.CustomErrorMessageCode.USER_NOT_FOUND;
+
 /**
  * @author Ivan Velichko
  * @date 31.10.2021 12:41
@@ -71,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto create(OrderDto orderDto) {
         Optional<User> optionalUser = userDao.findBy(orderDto.getUserId());
         if (optionalUser.isEmpty()) {
-            throw new NoSuchEntityException("error_message.user_not_found");
+            throw new NoSuchEntityException(USER_NOT_FOUND);
         } else {
             Order order = orderMapper.orderDtoToOrder(orderDto);
             order.setUser(optionalUser.get());

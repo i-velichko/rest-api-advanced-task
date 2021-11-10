@@ -5,9 +5,9 @@ package com.epam.esm.exception;
  * @date 02.11.2021 16:52
  */
 public class ErrorDetails {
-    private String messageKey;
-    private String incorrectParameter;
-    private int ErrorCode;
+    private final String messageKey;
+    private final String incorrectParameter;
+    private final int ErrorCode;
 
     public ErrorDetails(String messageKey, String incorrectParameter, int errorCode) {
         this.messageKey = messageKey;

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @date 03.11.2021 12:26
  */
 @Component
-public class TagLinkBuilder extends AbstractLinkBuilder<TagDto>{
+public class TagLinkBuilder extends AbstractLinkBuilder<TagDto> {
 
     @Override
     public void addLinks(TagDto tagDto) {

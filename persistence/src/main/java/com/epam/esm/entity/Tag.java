@@ -29,5 +29,4 @@ public class Tag {
 
     @ManyToMany(mappedBy = "tags")
     private Set<GiftCertificate> certificates = new HashSet<>();
-
 }

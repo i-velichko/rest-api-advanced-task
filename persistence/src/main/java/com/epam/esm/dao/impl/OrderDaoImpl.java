@@ -71,6 +71,6 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public void delete(long id) {
-        throw new UnsupportedOperationException(); //todo ??
+        throw new UnsupportedOperationException();
     }
 }

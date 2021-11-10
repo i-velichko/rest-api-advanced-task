@@ -1,6 +1,5 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.linkbuilder.LinkBuilder;
 import com.epam.esm.service.OrderService;
@@ -9,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class OrderController {
     private final OrderService orderService;
     private final LinkBuilder<OrderDto> linkBuilder;
+    private static final String CERTIFICATES = "certificates";
 
     @Autowired
     public OrderController(OrderService orderService, LinkBuilder<OrderDto> linkBuilder) {
@@ -42,25 +40,24 @@ public class OrderController {
         orderDtoList.forEach(linkBuilder::addLinks);
         orderDtoList.forEach(orderDto -> orderDto.add(linkTo(methodOn(GiftCertificateController.class)
                 .findAllBy(orderDto.getId()))
-                .withRel("certificates"))); //todo paramName
+                .withRel(CERTIFICATES)));
         return orderDtoList;
     }
 
     @GetMapping("/user/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderDto> findAllBy(@PathVariable @Positive long userId) {
+    public List<OrderDto> findAllBy(@PathVariable long userId) {
         List<OrderDto> orderDtoList = orderService.findAllBy(userId);
         orderDtoList.forEach(linkBuilder::addLinks);
         orderDtoList.forEach(orderDto -> orderDto.add(linkTo(methodOn(GiftCertificateController.class)
                 .findAllBy(orderDto.getId()))
-                .withRel("certificates"))); //todo paramName
+                .withRel(CERTIFICATES)));
         return orderDtoList;
     }
 
     @PostMapping
-    @Validated(OrderDto.OnCreate.class)
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDto create(@Valid @RequestBody OrderDto orderDto) {
+    public OrderDto create(@Validated(OrderDto.OnCreate.class) @RequestBody OrderDto orderDto) {
         OrderDto creatableOrder = orderService.create(orderDto);
         linkBuilder.addLinks(creatableOrder);
         return creatableOrder;
@@ -68,12 +65,12 @@ public class OrderController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public OrderDto findBy(@PathVariable @Positive long id) {
+    public OrderDto findBy(@PathVariable long id) {
         OrderDto orderDto = orderService.findBy(id);
         linkBuilder.addLinks(orderDto);
         orderDto.add(linkTo(methodOn(GiftCertificateController.class)
                 .findAllBy(orderDto.getId()))
-                .withRel("certificates")); //todo paramName
+                .withRel(CERTIFICATES));
         return orderDto;
     }
 }

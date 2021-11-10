@@ -9,9 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,7 +45,7 @@ public class TagController {
     }
 
     @GetMapping("/name")
-    public TagDto findBy(@RequestParam(value = "name") @NotEmpty @Size(min = 1, max = 45) String name) {
+    public TagDto findBy(@RequestParam(value = "name") String name) {
         TagDto tagDto = tagService.findBy(name);
         linkBuilder.addLinks(tagDto);
         return tagDto;
@@ -69,11 +66,7 @@ public class TagController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable @Positive Long id) {
-        try {
-            tagService.delete(id);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("entity.remove.tag"); //todo !!!
-        }
+    public void delete(@PathVariable Long id) {
+        tagService.delete(id);
     }
 }

@@ -25,8 +25,8 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserDao userDao;
-    private ParamsHandler paramsHandler;
-    private PaginationMapper paginationMapper;
+    private final ParamsHandler paramsHandler;
+    private final PaginationMapper paginationMapper;
 
     @Autowired
     public UserServiceImpl(UserMapper userMapper, UserDao userDao, ParamsHandler paramsHandler, PaginationMapper paginationMapper) {

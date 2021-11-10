@@ -22,8 +22,8 @@ import java.util.Optional;
 public class TagDaoImpl implements TagDao {
 
     private static final String FIND_MOST_USERS_WIDELY_USED_TAG_SQL = "SELECT COUNT(t.id) as tagCount,\n" +
-            "       t.id        as tagId,\n" +
-            "       t.name      as tagName,\n" +
+            "       t.id        ,\n" +
+            "       t.name      ,\n" +
             "       mo.nickname as userNickname,\n" +
             "       orderID,\n" +
             "       mo.highestCost\n" +
@@ -90,7 +90,7 @@ public class TagDaoImpl implements TagDao {
     public Optional<Tag> findMostUsersWidelyUsedTag(long userId) {
         Query query = entityManager.createNativeQuery(FIND_MOST_USERS_WIDELY_USED_TAG_SQL, Tag.class);
         query.setParameter(USER_ID_PARAM, userId);
-        return (Optional<Tag>) query.getSingleResult();
+        return Optional.of((Tag) query.getSingleResult());
     }
 
     @Override

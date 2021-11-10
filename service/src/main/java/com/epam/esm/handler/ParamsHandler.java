@@ -26,38 +26,14 @@ import static com.epam.esm.exception.CustomErrorMessageCode.*;
 @Component
 @PropertySource("classpath:error_code.properties")
 public class ParamsHandler {
-    @Value("00")
-    private int DEFAULT;
     @Value("01")
-    private int GIFT_CERTIFICATE_INVALID_ID;
-    @Value("02")
-    private int GIFT_CERTIFICATE_INVALID_NAME;
-    @Value("03")
-    private int GIFT_CERTIFICATE_INVALID_DESCRIPTION;
-    @Value("04")
-    private int GIFT_CERTIFICATE_INVALID_PRICE;
-    @Value("05")
-    private int GIFT_CERTIFICATE_INVALID_DURATION;
-    @Value("06")
-    private int GIFT_CERTIFICATE_INVALID_QUANTITY;
-    @Value("07")
-    private int TAG_INVALID_ID;
-    @Value("08")
-    private int TAG_INVALID_NAME;
-    @Value("09")
-    private int USER_INVALID_ID;
-    @Value("10")
     private int PAGE_INVALID_NUMBER;
-    @Value("11")
+    @Value("02")
     private int PAGE_INVALID_SIZE;
-    @Value("12")
+    @Value("03")
     private int INVALID_SORTING_ORDER_BY_DATE;
-    @Value("13")
+    @Value("04")
     private int INVALID_SORTING_ORDER_BY_NAME;
-    @Value("14")
-    private int NO_FIELDS_TO_UPDATE;
-    @Value("15")
-    private int ORDER_INVALID_ID;
     private static final String PAGE_NUMBER = "pageNumber";
     private static final String DEFAULT_PAGE_NUMBER = "1";
     private static final String PAGE_SIZE = "pageSize";
@@ -69,12 +45,6 @@ public class ParamsHandler {
     private static final String SORTING_ORDER_BY_DATE = "sortingOrderByDate";
     private static final String SORTING_ORDER_BY_NAME = "sortingOrderByName";
 
-    /**
-     * Gets pagination dto.
-     *
-     * @param pageParams the page params
-     * @return the pagination dto
-     */
     public PaginationDto getPaginationDto(Map<String, String> pageParams) {
         String pageNumber = StringUtils.isBlank(pageParams.get(PAGE_NUMBER)) ? DEFAULT_PAGE_NUMBER : pageParams.get(PAGE_NUMBER);
         String pageSize = StringUtils.isBlank(pageParams.get(PAGE_SIZE)) ? DEFAULT_PAGE_SIZE : pageParams.get(PAGE_SIZE);
@@ -84,12 +54,6 @@ public class ParamsHandler {
         return new PaginationDto(offset, limit);
     }
 
-    /**
-     * Gets gift certificates search params dto
-     *
-     * @param params the search params
-     * @return the gift certificates search params dto
-     */
     public CertificateSearchParamsDto getGiftCertificatesSearchParamsDto(Map<String, String> params) {
         CertificateSearchParamsDto searchParamsDto = new CertificateSearchParamsDto();
         String tagNames = params.get(TAG_NAMES);
@@ -127,7 +91,7 @@ public class ParamsHandler {
             }
         }
         if (!errors.isEmpty()) {
-            throw new IncorrectParamValueException("invalid sorting order params", errors);
+            throw new IncorrectParamValueException(INVALID_SORTING_ORDERS_PARAM, errors);
         }
     }
 
@@ -144,7 +108,7 @@ public class ParamsHandler {
             errors.add(errorDetails);
         }
         if (!errors.isEmpty()) {
-            throw new IncorrectParamValueException("invalid page params", errors);
+            throw new IncorrectParamValueException(INVALID_PAGE_PARAMS, errors);
         }
     }
 

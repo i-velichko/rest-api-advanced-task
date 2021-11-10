@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+import static com.epam.esm.exception.CustomErrorMessageCode.TAG_ALREADY_EXIST;
 import static com.epam.esm.exception.CustomErrorMessageCode.TAG_NOT_FOUND;
 
 /**
@@ -32,7 +33,6 @@ public class TagServiceImpl implements TagService {
     private final TagMapper tagMapper;
     private final PaginationMapper paginationMapper;
     private final ParamsHandler paramsHandler;
-
 
     @Autowired
     public TagServiceImpl(TagDao tagDao, TagMapper tagMapper, PaginationMapper paginationMapper, ParamsHandler paramsHandler) {
@@ -56,13 +56,13 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDto findBy(String name) {
-        return tagMapper.tagToTagDto(tagDao.findBy(name).orElseThrow(NoSuchEntityException::new));
+        return tagMapper.tagToTagDto(tagDao.findBy(name).orElseThrow(() -> new NoSuchEntityException(TAG_NOT_FOUND)));
     }
 
     @Override
     public TagDto create(TagDto tagDto) {
         if (tagDao.findBy(tagDto.getName()).isPresent()) {
-            throw new DuplicateEntityException("error_message.exist");
+            throw new DuplicateEntityException(TAG_ALREADY_EXIST);
         }
         Tag tag = tagDao.create(tagMapper.tagDtoToTag(tagDto));
         return tagMapper.tagToTagDto(tag);
@@ -71,13 +71,13 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto findMostUsersWidelyUsedTag(long userId) {
         return tagMapper.tagToTagDto(tagDao.findMostUsersWidelyUsedTag(userId)
-                .orElseThrow(NoSuchEntityException::new));
+                .orElseThrow(() -> new NoSuchEntityException(TAG_NOT_FOUND)));
     }
 
     @Override
     public void delete(Long id) {
         if (tagDao.findBy(id).isEmpty()) {
-            throw new NoSuchEntityException();
+            throw new NoSuchEntityException(TAG_NOT_FOUND);
         }
         tagDao.delete(id);
     }

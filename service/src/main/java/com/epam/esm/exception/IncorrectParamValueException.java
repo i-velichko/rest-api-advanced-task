@@ -10,12 +10,6 @@ import java.util.List;
 public class IncorrectParamValueException extends RuntimeException {
     private List<ErrorDetails> errors;
 
-    /**
-     * Constructor a IncorrectParamValueException with the specified detail message and list of error details
-     *
-     * @param message the detail message
-     * @param errors the list of error details
-     */
     public IncorrectParamValueException(String message, List<ErrorDetails> errors) {
         super(message);
         this.errors = errors;

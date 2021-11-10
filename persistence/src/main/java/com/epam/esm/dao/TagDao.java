@@ -10,6 +10,8 @@ import java.util.Optional;
  */
 public interface TagDao extends BaseDao<Tag> {
     Tag findOrCreateTag(Tag tag);
+
     Optional<Tag> findBy(String name);
+
     Optional<Tag> findMostUsersWidelyUsedTag(long userId);
 }

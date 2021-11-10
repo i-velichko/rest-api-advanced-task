@@ -4,11 +4,7 @@ import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-
-import static com.epam.esm.exception.CustomErrorMessageCode.TAG_NAME_INCORRECT;
 
 /**
  * @author Ivan Velichko
