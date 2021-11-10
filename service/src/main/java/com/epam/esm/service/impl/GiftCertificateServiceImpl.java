@@ -85,7 +85,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public List<GiftCertificateDto> findAllBy(long orderId) {
-        return certificateMapper.certificatesToCertificateDtoList(giftCertificateDao.findAllBy(orderId));
+        List<GiftCertificateDto> giftCertificateDtoList = certificateMapper.certificatesToCertificateDtoList(giftCertificateDao.findAllBy(orderId));
+        if (giftCertificateDtoList.isEmpty()) {
+            throw new NoSuchEntityException(CERTIFICATE_NOT_FOUND);
+        }
+        return giftCertificateDtoList;
     }
 
     @Override
@@ -104,7 +108,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public void delete(long id) {
-
+        giftCertificateDao.findBy(id).orElseThrow(() -> new NoSuchEntityException(CERTIFICATE_NOT_FOUND));
+        giftCertificateDao.delete(id);
     }
 
     @Override

@@ -12,13 +12,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolation;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.epam.esm.exception.CustomErrorMessageCode.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * @author Ivan Velichko
@@ -64,7 +69,7 @@ public class CustomControllerAdvisor {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException(Locale locale) {
         String localeMsg = i18nManager.getMessage(TAG_CAN_NOT_BE_REMOVED, locale);
-        return new ResponseEntity<>(createResponse(DATA_INTEGRITY_VIOLATION_CODE, localeMsg), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(createResponse(DATA_INTEGRITY_VIOLATION_CODE, localeMsg), BAD_REQUEST);
     }
 
     @ExceptionHandler(DuplicateEntityException.class)
@@ -76,41 +81,30 @@ public class CustomControllerAdvisor {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String message = resolveBindingResultErrors(e.getBindingResult());
-        return new ResponseEntity<>(createResponse(40001, message), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(createResponse(40001, message), BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(Locale locale) {
-        return new ResponseEntity<>(createResponse(40001, i18nManager.getMessage(INVALID_REQUEST_VALUE, locale)), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(createResponse(40001, i18nManager.getMessage(INVALID_REQUEST_VALUE, locale)), BAD_REQUEST);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
-        return new ResponseEntity<>(createResponse(NOT_VALID_REQUEST_CODE, e.getMessage()), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(BAD_REQUEST)
+    public ResponseEntity<Object> handler(Exception e) {
+        return new ResponseEntity<>(createResponse(40001, e.getMessage()), BAD_REQUEST);
     }
 
     @ExceptionHandler(IncorrectParamValueException.class)
     public ResponseEntity<Object> handleIncorrectParamValueException(IncorrectParamValueException e) {
-        return new ResponseEntity<>(createResponse(NO_SUCH_PARAMETER_CODE, e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(NoSuchParameterException.class)
-    public ResponseEntity<Object> handleNoSuchParameterException(NoSuchParameterException e, Locale locale) {
-        String localeMsg = i18nManager.getMessage(e.getMessage(), locale);
-        return new ResponseEntity<>(createResponse(NO_SUCH_PARAMETER_CODE, localeMsg), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ConvertEntityException.class)
-    public ResponseEntity<Object> handleConvertEntityException(ConvertEntityException e, Locale locale) {
-        String localeMsg = i18nManager.getMessage(e.getMessage(), locale);
-        return new ResponseEntity<>(createResponse(CONVERT_ENTITY_ERROR_CODE, localeMsg), HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(createResponse(NO_SUCH_PARAMETER_CODE, e.getMessage()), BAD_REQUEST);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException e, Locale locale) {
         String msg = getEntityNameByMsg(e, ".", "Dao").toLowerCase(Locale.ROOT);
         String localeMsg = i18nManager.getMessage(ENTITY_NOT_FOUND + msg, locale);
-        return new ResponseEntity<>(createResponse(EMPTY_RESULT_DATA_ACCESS_CODE, localeMsg), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(createResponse(EMPTY_RESULT_DATA_ACCESS_CODE, localeMsg), BAD_REQUEST);
     }
 
     private Map<String, Object> createResponse(int errorCode, String errorDescription) {
