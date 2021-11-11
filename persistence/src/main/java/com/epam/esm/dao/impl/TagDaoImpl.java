@@ -3,6 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.entity.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -61,7 +62,7 @@ public class TagDaoImpl implements TagDao {
     @Override
     public Tag create(Tag tag) {
         entityManager.persist(tag);
-        return tag;
+        return entityManager.find(Tag.class, tag.getId());
     }
 
     @Override

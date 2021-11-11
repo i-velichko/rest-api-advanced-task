@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
  */
 @Component
 public class QueryBuilder {
-    private static final String DELETED = "deleted";
     private static final String TAGS = "tags";
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
@@ -27,15 +26,15 @@ public class QueryBuilder {
     public CriteriaQuery<GiftCertificate> createCriteriaQuery(CertificateSearchParams searchParams, CriteriaBuilder criteriaBuilder) {
         CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> giftCertificateRoot = criteriaQuery.from(GiftCertificate.class);
-        List<Predicate> restrictions = new ArrayList<>();
-        restrictions.add(criteriaBuilder.equal(giftCertificateRoot.get(DELETED), Boolean.FALSE));
+        List<Predicate> predicates = new ArrayList<>();
+
         if (searchParams.getTagNames() != null) {
-            restrictions.addAll(addTagNames(searchParams.getTagNames(), criteriaBuilder, giftCertificateRoot));
+            predicates.addAll(addTagNames(searchParams.getTagNames(), criteriaBuilder, giftCertificateRoot));
         }
         if (searchParams.getPartNameOrDescription() != null) {
-            restrictions.add(addPartNameOrDescription(searchParams.getPartNameOrDescription(), criteriaBuilder, giftCertificateRoot));
+            predicates.add(addPartNameOrDescription(searchParams.getPartNameOrDescription(), criteriaBuilder, giftCertificateRoot));
         }
-        criteriaQuery.select(giftCertificateRoot).where(restrictions.toArray(new Predicate[]{}));
+        criteriaQuery.select(giftCertificateRoot).where(predicates.toArray(new Predicate[]{}));
         addSortType(searchParams, criteriaBuilder, criteriaQuery, giftCertificateRoot);
         return criteriaQuery;
     }

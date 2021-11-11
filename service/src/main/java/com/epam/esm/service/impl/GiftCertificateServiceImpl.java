@@ -71,14 +71,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         Pagination pagination = paginationMapper.paginationDtoToPagination(paginationDto);
         CertificateSearchParams searchParams = searchParamMapper.searchParamsDtoToSearchParams(searchParamsDto);
         List<GiftCertificate> certificates;
-        if (ObjectUtils.allNotNull(
+        if (ObjectUtils.allNull(
                 searchParams.getPartNameOrDescription(),
                 searchParams.getSortingOrderByDate(),
                 searchParams.getSortingOrderByName(),
                 searchParams.getTagNames())) {
-            certificates = giftCertificateDao.findAllBy(pagination, searchParams);
-        } else {
             certificates = giftCertificateDao.findAll(pagination);
+        } else {
+            certificates = giftCertificateDao.findAllBy(pagination, searchParams);
         }
         return certificateMapper.certificatesToCertificateDtoList(certificates);
     }

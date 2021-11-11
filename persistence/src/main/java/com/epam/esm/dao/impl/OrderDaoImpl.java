@@ -61,7 +61,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public Order create(Order order) {
         entityManager.persist(order);
-        return order;
+        return entityManager.find(Order.class, order.getId());
     }
 
     @Override

@@ -39,7 +39,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User create(User user) {
         entityManager.persist(user);
-        return user;
+        return entityManager.find(User.class, user.getId());
     }
 
     @Override

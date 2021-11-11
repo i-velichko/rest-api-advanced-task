@@ -5,6 +5,7 @@ import com.epam.esm.dao.query.QueryBuilder;
 import com.epam.esm.entity.CertificateSearchParams;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Pagination;
+import com.epam.esm.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -74,7 +75,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     @Override
     public GiftCertificate create(GiftCertificate certificate) {
         entityManager.persist(certificate);
-        return certificate;
+        return entityManager.find(GiftCertificate.class, certificate.getId());
     }
 
     @Override
