@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.epam.esm.exception.CustomErrorMessageCode.TAG_ALREADY_EXIST;
 import static com.epam.esm.exception.CustomErrorMessageCode.TAG_NOT_FOUND;
@@ -64,6 +65,7 @@ public class TagServiceImpl implements TagService {
         if (tagDao.findBy(tagDto.getName()).isPresent()) {
             throw new DuplicateEntityException(TAG_ALREADY_EXIST);
         }
+        tagDto.setName(tagDto.getName().trim());
         Tag tag = tagDao.create(tagMapper.tagDtoToTag(tagDto));
         return tagMapper.tagToTagDto(tag);
     }

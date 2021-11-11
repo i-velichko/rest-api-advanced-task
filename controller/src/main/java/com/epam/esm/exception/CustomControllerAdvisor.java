@@ -1,7 +1,6 @@
 package com.epam.esm.exception;
 
 import com.epam.esm.i18n.I18nManager;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -12,17 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import javax.validation.ConstraintViolation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.epam.esm.exception.CustomErrorMessageCode.*;
+import static com.epam.esm.exception.CustomErrorMessageCode.ENTITY_NOT_FOUND;
+import static com.epam.esm.exception.CustomErrorMessageCode.INVALID_REQUEST_VALUE;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -67,9 +64,8 @@ public class CustomControllerAdvisor {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> handleDataIntegrityViolationException(Locale locale) {
-        String localeMsg = i18nManager.getMessage(TAG_CAN_NOT_BE_REMOVED, locale);
-        return new ResponseEntity<>(createResponse(DATA_INTEGRITY_VIOLATION_CODE, localeMsg), BAD_REQUEST);
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        return new ResponseEntity<>(createResponse(DATA_INTEGRITY_VIOLATION_CODE, e.getMessage()), BAD_REQUEST);
     }
 
     @ExceptionHandler(DuplicateEntityException.class)
@@ -96,8 +92,8 @@ public class CustomControllerAdvisor {
     }
 
     @ExceptionHandler(IncorrectParamValueException.class)
-    public ResponseEntity<Object> handleIncorrectParamValueException(IncorrectParamValueException e) {
-        return new ResponseEntity<>(createResponse(NO_SUCH_PARAMETER_CODE, e.getMessage()), BAD_REQUEST);
+    public ResponseEntity<Object> handleIncorrectParamValueException(IncorrectParamValueException e, Locale locale) {
+        return new ResponseEntity<>(createResponse(NO_SUCH_PARAMETER_CODE, i18nManager.getMessage(e.getMessage(), locale)), BAD_REQUEST);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)

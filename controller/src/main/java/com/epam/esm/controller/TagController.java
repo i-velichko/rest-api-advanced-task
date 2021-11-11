@@ -9,6 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,21 +40,21 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    public TagDto findBy(@PathVariable Long id) {
+    public TagDto findBy(@PathVariable @Positive Long id) {
         TagDto tagDto = tagService.findBy(id);
         linkBuilder.addLinks(tagDto);
         return tagDto;
     }
 
     @GetMapping("/name")
-    public TagDto findBy(@RequestParam(value = "name") String name) {
+    public TagDto findBy(@RequestParam(value = "name") @NotEmpty String name) {
         TagDto tagDto = tagService.findBy(name);
         linkBuilder.addLinks(tagDto);
         return tagDto;
     }
 
     @GetMapping("/users_best_tag/{id}")
-    public TagDto findMostUsersMostWidelyUsedTag(@PathVariable long id) {
+    public TagDto findMostUsersMostWidelyUsedTag(@PathVariable @Positive long id) {
         TagDto tagDto = tagService.findMostUsersWidelyUsedTag(id);
         linkBuilder.addLinks(tagDto);
         return tagDto;
@@ -60,13 +62,13 @@ public class TagController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TagDto create(@RequestBody @Valid TagDto tagDto) {
+    public TagDto create(@Validated @RequestBody TagDto tagDto) {
         return tagService.create(tagDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @Positive Long id) {
         tagService.delete(id);
     }
 }

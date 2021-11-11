@@ -23,13 +23,11 @@ public class UserDto extends RepresentationModel<UserDto> {
     public interface OnUpdate {
     }
 
-    @Null(groups = UserDto.OnCreate.class)
-    @NotNull(groups = UserDto.OnUpdate.class)
-    @Positive
     private long id;
 
     @NotEmpty(groups = {UserDto.OnCreate.class, UserDto.OnUpdate.class})
     @NotNull(groups = UserDto.OnCreate.class)
+    @NotBlank
     @Size(min = 1, max = 45)
     private String nickname;
 }

@@ -39,6 +39,7 @@ public class OrderDto extends RepresentationModel<OrderDto> {
     private long userId;
 
     @NotEmpty
+    @NotBlank
     @Size(min = 1, max = 45)
     private String userNickname;
 

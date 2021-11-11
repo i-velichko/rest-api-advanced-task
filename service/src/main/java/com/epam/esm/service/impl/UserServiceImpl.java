@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+import static com.epam.esm.exception.CustomErrorMessageCode.USER_NOT_FOUND;
+
 /**
  * @author Ivan Velichko
  * @date 30.10.2021 13:51
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService {
     public UserDto findBy(Long id) {
         return userDao.findBy(id)
                 .map(userMapper::userToDtoUser)
-                .orElseThrow(NoSuchEntityException::new);
+                .orElseThrow(() -> new NoSuchEntityException(USER_NOT_FOUND));
     }
 
     @Override

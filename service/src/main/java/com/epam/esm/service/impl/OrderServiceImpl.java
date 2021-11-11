@@ -8,6 +8,7 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.User;
+import com.epam.esm.exception.CustomErrorMessageCode;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.handler.ParamsHandler;
 import com.epam.esm.mapper.OrderMapper;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.epam.esm.exception.CustomErrorMessageCode.*;
 import static com.epam.esm.exception.CustomErrorMessageCode.USER_NOT_FOUND;
 
 /**
@@ -59,14 +61,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> findAllBy(long userId) {
-        return orderMapper.ordersToOrderDtoList(orderDao.findAllBy(userId));
+        List<OrderDto> orderDtoList = orderMapper.ordersToOrderDtoList(orderDao.findAllBy(userId));
+        if (orderDtoList.isEmpty()) {
+            throw new NoSuchEntityException(ORDERS_NOT_FOUND);
+        }
+        return orderDtoList;
     }
 
     @Override
     public OrderDto findBy(Long id) {
         return orderDao.findBy(id)
                 .map(orderMapper::orderToOrderDto)
-                .orElseThrow(NoSuchEntityException::new);
+                .orElseThrow(() -> new NoSuchEntityException(ORDER_NOT_FOUND));
     }
 
     @Override

@@ -20,4 +20,6 @@ public class CustomErrorMessageCode {
     public static final String USER_NOT_FOUND = "error_message.user.not.found";
     public static final String INVALID_SORTING_ORDERS_PARAM = "invalid.sorting.order.params";
     public static final String INVALID_PAGE_PARAMS = "invalid.page.params";
+    public static final String ORDER_NOT_FOUND = "error.message.not.found.order";
+    public static final String ORDERS_NOT_FOUND = "error.message.not.found.orders";
 }

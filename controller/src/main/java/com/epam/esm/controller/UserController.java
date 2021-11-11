@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}")
-    public UserDto findBy(@PathVariable Long id) {
+    public UserDto findBy(@PathVariable @Positive Long id) {
         UserDto userDto = userService.findBy(id);
         linkBuilder.addLinks(userDto);
         return userDto;
@@ -54,7 +55,7 @@ public class UserController {
 
     @PatchMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto update(@PathVariable Long id, @Valid @RequestBody UserDto userDto) {
+    public UserDto update(@PathVariable @Positive Long id, @Valid @RequestBody UserDto userDto) {
         userDto.setId(id);
         return userService.update(userDto);
     }
