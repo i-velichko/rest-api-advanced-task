@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -85,9 +86,9 @@ public class CustomControllerAdvisor {
         return new ResponseEntity<>(createResponse(40001, i18nManager.getMessage(INVALID_REQUEST_VALUE, locale)), BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(BAD_REQUEST)
-    public ResponseEntity<Object> handler(Exception e) {
+    public ResponseEntity<Object> handler(ConstraintViolationException e) {
         return new ResponseEntity<>(createResponse(40001, e.getMessage()), BAD_REQUEST);
     }
 
