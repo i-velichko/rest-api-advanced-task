@@ -22,13 +22,13 @@ import java.util.Locale;
 @PropertySource("classpath:locale.properties")
 public class I18nManager {
     @Value("${locale.us}")
-    private String LOCALE_US;
+    private String localeUS;
     @Value("${locale.ru}")
-    private String LOCALE_RU;
+    private String localeRu;
     @Value("${language.en}")
-    private String LANGUAGE_EN;
+    private String languageEn;
     @Value("${country.us}")
-    private String COUNTRY_US;
+    private String countryUS;
 
     private final ResourceBundleMessageSource resourceBundleMessageSource;
 
@@ -50,10 +50,10 @@ public class I18nManager {
     }
 
     public String getMessage(String key, Locale locale) {
-        List<String> AVAILABLE_LOCALES = Arrays.asList(LOCALE_US, LOCALE_RU);
-        Locale DEFAULT_LOCALE = new Locale(LANGUAGE_EN, COUNTRY_US);
-        if (!AVAILABLE_LOCALES.contains(locale.toString())) {
-            locale = DEFAULT_LOCALE;
+        List<String> availableLocales = Arrays.asList(localeUS, localeRu);
+        Locale defaultLocale = new Locale(languageEn, countryUS);
+        if (!availableLocales.contains(locale.toString())) {
+            locale = defaultLocale;
         }
         return resourceBundleMessageSource.getMessage(key, null, locale);
     }

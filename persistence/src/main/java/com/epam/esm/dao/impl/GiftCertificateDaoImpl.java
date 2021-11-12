@@ -80,8 +80,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public Optional<GiftCertificate> findBy(long id) {
-        Optional<GiftCertificate> optionalGiftCertificate = Optional.ofNullable(entityManager.find(GiftCertificate.class, id));
-        return optionalGiftCertificate;
+        return Optional.ofNullable(entityManager.find(GiftCertificate.class, id));
     }
 
     @Override

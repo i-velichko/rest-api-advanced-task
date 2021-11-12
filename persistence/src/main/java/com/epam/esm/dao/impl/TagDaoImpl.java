@@ -3,7 +3,6 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.Pagination;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.entity.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -13,6 +12,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 @Repository
 public class TagDaoImpl implements TagDao {
-
+    private static final String NAME_PARAM = "name";
     private static final String FIND_MOST_USERS_WIDELY_USED_TAG_SQL = "SELECT COUNT(t.id) as tagCount,\n" +
             "       t.id        ,\n" +
             "       t.name      ,\n" +
@@ -76,15 +76,13 @@ public class TagDaoImpl implements TagDao {
     }
 
     public Optional<Tag> findBy(String name) {
-        final String NAME_PARAM = "name";
-        final int TAG_PARAM = 0;
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tag> query = criteriaBuilder.createQuery(Tag.class);
         Root<Tag> root = query.from(Tag.class);
         query.select(root);
         query.where(criteriaBuilder.equal(root.get(NAME_PARAM), name));
         List<Tag> tags = entityManager.createQuery(query).getResultList();
-        return tags.size() == 0 ? Optional.empty() : Optional.of(tags.get(TAG_PARAM));
+        return tags.stream().filter(Objects::nonNull).findFirst();
     }
 
     @Override

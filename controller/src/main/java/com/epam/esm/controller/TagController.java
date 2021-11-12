@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -36,7 +35,9 @@ public class TagController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<TagDto> findAll(@RequestParam Map<String, String> pageParams) {
-        return tagService.findAll(pageParams).stream().peek(linkBuilder::addLinks).collect(Collectors.toList());
+        return tagService.findAll(pageParams).stream()
+                .peek(linkBuilder::addLinks)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

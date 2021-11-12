@@ -48,8 +48,8 @@ public class CustomControllerAdvisor {
     private int METHOD_ARGUMENT_NOT_VALID_CODE;
     @Value("${no.such.parameter.code}")
     private int NO_SUCH_PARAMETER_CODE;
-    @Value("${convert.entity.error.code}")
-    private int CONVERT_ENTITY_ERROR_CODE;
+    @Value("${constraint.violation.code}")
+    private int CONSTRAINT_VIOLATION_CODE;
     @Value("${not.valid.request.error.code}")
     private int NOT_VALID_REQUEST_CODE;
 
@@ -78,18 +78,18 @@ public class CustomControllerAdvisor {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String message = resolveBindingResultErrors(e.getBindingResult());
-        return new ResponseEntity<>(createResponse(40001, message), BAD_REQUEST);
+        return new ResponseEntity<>(createResponse(METHOD_ARGUMENT_NOT_VALID_CODE, message), BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(Locale locale) {
-        return new ResponseEntity<>(createResponse(40001, i18nManager.getMessage(INVALID_REQUEST_VALUE, locale)), BAD_REQUEST);
+        return new ResponseEntity<>(createResponse(NOT_VALID_REQUEST_CODE, i18nManager.getMessage(INVALID_REQUEST_VALUE, locale)), BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<Object> handler(ConstraintViolationException e) {
-        return new ResponseEntity<>(createResponse(40001, e.getMessage()), BAD_REQUEST);
+        return new ResponseEntity<>(createResponse(CONSTRAINT_VIOLATION_CODE, e.getMessage()), BAD_REQUEST);
     }
 
     @ExceptionHandler(IncorrectParamValueException.class)

@@ -21,6 +21,8 @@ import java.util.Optional;
  */
 @Repository
 public class OrderDaoImpl implements OrderDao {
+    private static final String USER_PARAM = "user";
+    private static final String ID_PARAM = "id";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -39,8 +41,6 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public List<Order> findAllBy(long userId) {
-        final String USER_PARAM = "user";
-        final String ID_PARAM = "id";
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
         Root<Order> order = criteriaQuery.from(Order.class);
