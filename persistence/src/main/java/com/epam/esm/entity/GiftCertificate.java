@@ -57,7 +57,6 @@ public class GiftCertificate {
 
     @PrePersist
     public void prePersist() {
-        createDate = LocalDateTime.now();
         lastUpdateDate = createDate;
     }
 
