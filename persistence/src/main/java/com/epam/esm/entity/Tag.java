@@ -20,6 +20,11 @@ import java.util.Set;
 @ToString(exclude = {"certificates"})
 public class Tag {
 
+    public Tag(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
