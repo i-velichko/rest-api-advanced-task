@@ -65,8 +65,9 @@ public class CustomControllerAdvisor {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        return new ResponseEntity<>(createResponse(DATA_INTEGRITY_VIOLATION_CODE, e.getMessage()), BAD_REQUEST);
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e, Locale locale) {
+        String localeMsg = i18nManager.getMessage(CustomErrorMessageCode.TAG_CAN_NOT_BE_REMOVED, locale);
+        return new ResponseEntity<>(createResponse(DATA_INTEGRITY_VIOLATION_CODE, localeMsg), BAD_REQUEST);
     }
 
     @ExceptionHandler(DuplicateEntityException.class)
@@ -88,7 +89,7 @@ public class CustomControllerAdvisor {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(BAD_REQUEST)
-    public ResponseEntity<Object> handler(ConstraintViolationException e) {
+    public ResponseEntity<Object> handleConstraintViolationExceptionByJavax(ConstraintViolationException e) {
         return new ResponseEntity<>(createResponse(CONSTRAINT_VIOLATION_CODE, e.getMessage()), BAD_REQUEST);
     }
 

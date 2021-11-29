@@ -21,7 +21,6 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"id"})
 public class OrderDto extends RepresentationModel<OrderDto> {
 
-    @Null(groups = OrderDto.OnCreate.class)
     @Positive
     private long id;
 

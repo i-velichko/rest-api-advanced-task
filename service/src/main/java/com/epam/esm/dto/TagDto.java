@@ -21,7 +21,6 @@ import javax.validation.constraints.Size;
 public class TagDto extends RepresentationModel<TagDto> {
 
     private long id;
-
     @NotEmpty
     @NotBlank
     @Size(min = 1, max = 45)
